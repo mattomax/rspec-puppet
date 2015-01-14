@@ -1,5 +1,6 @@
 require 'puppet'
 require 'fileutils'
+require 'puppet/file_system'
 
 module RSpec::Puppet
   class Setup
@@ -120,12 +121,12 @@ EOF
     end
 
     def self.safe_make_symlink(source, target)
-      if File.exists? target
-        unless File.symlink? target
+      if Puppet::FileSystem::exist? target
+        unless Puppet::FileSystem::symlink? target
           $stderr.puts "!! #{target} already exists and is not a symlink"
         end
       else
-        FileUtils.ln_s(source, target)
+        Puppet::FileSystem::symlink(source, target)
         puts " + #{target}"
       end
     end
